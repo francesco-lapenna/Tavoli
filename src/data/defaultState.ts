@@ -72,7 +72,7 @@ export const DEFAULT_OBSTACLES: Obstacle[] = [
 ];
 
 export const DEFAULT_TEXTBOXES: TextBox[] = [
-  {"id":"d4aced8e-8bee-4bd0-90a9-3b3636d18636","x":12,"y":0,"text":"Brace","width":4,"height":2,"fontSize":24},
-  {"id":"b9971fab-7364-479f-92f0-909e1361c93b","x":9,"y":26,"text":"Cucina","width":4,"height":2,"fontSize":24},
-  {"id":"ca3ce441-496f-40b1-bb3d-bdd0d26bffcd","x":20,"y":26,"text":"Bagno","width":3,"height":2,"fontSize":24},
+  {"id":"d4aced8e-8bee-4bd0-90a9-3b3636d18636","x":12,"y":0,"html":"Brace","width":4,"height":2,"fontSize":24},
+  {"id":"b9971fab-7364-479f-92f0-909e1361c93b","x":9,"y":26,"html":"Cucina","width":4,"height":2,"fontSize":24},
+  {"id":"ca3ce441-496f-40b1-bb3d-bdd0d26bffcd","x":20,"y":26,"html":"Bagno","width":3,"height":2,"fontSize":24},
 ];

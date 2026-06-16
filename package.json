@@ -1,7 +1,7 @@
 {
   "name": "tavoli",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "electron/main.js",
   "scripts": {
@@ -10,9 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "electron:dev": "npm run build && electron .",
-    "dist": "npm run build && electron-builder --linux --win",
-    "dist:linux": "npm run build && electron-builder --linux",
-    "dist:win": "npm run build && electron-builder --win"
+    "dist": "npm run dist:linux && npm run dist:win",
+    "dist:linux": "npm run build && electron-builder --linux --config.directories.output=dist-electron/linux",
+    "dist:win": "electron-builder --win --config.directories.output=dist-electron/windows"
   },
   "build": {
     "appId": "it.tavoli.piantina",

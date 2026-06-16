@@ -61,6 +61,7 @@ export default function ElementEditor() {
   } = useFloorPlanStore();
 
   const labelRef = useRef<HTMLInputElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   // Derive single-selected element
   const single = selectedIds.length === 1 ? (() => {
@@ -79,6 +80,19 @@ export default function ElementEditor() {
       labelRef.current.select();
     }
   }, [selectedIds[0]]);
+
+  const textboxId = single?.kind === 'textbox' ? single.tb.id : null;
+  useEffect(() => {
+    if (single?.kind !== 'textbox' || !editorRef.current) return;
+    const html = single.tb.html ?? (single.tb as unknown as { text?: string }).text ?? '';
+    editorRef.current.innerHTML = html;
+  }, [textboxId]);
+
+  const syncHtml = () => {
+    if (single?.kind === 'textbox' && editorRef.current) {
+      updateTextBox(single.tb.id, { html: editorRef.current.innerHTML });
+    }
+  };
 
   if (selectedIds.length === 0) return null;
 
@@ -228,20 +242,49 @@ export default function ElementEditor() {
 
       {single.kind === 'textbox' && (() => {
         const tb = single.tb;
+        const HIGHLIGHTS = [
+          { color: '#fef08a', label: 'Giallo' },
+          { color: '#bbf7d0', label: 'Verde' },
+          { color: '#bfdbfe', label: 'Blu' },
+          { color: '#fecdd3', label: 'Rosa' },
+        ];
+        const cmd = (name: string, value?: string) => {
+          editorRef.current?.focus();
+          document.execCommand(name, false, value);
+          syncHtml();
+        };
         return (
           <>
-            <div className="flex flex-col gap-0.5">
+            <div className="flex flex-col gap-1">
               <label className="text-xs text-stone-500 font-medium">Testo</label>
-              <textarea value={tb.text}
-                onChange={(e) => updateTextBox(tb.id, { text: e.target.value })}
-                rows={2}
-                className="w-36 px-2 py-1.5 text-sm border border-stone-200 rounded-md focus:outline-none focus:border-amber-400 bg-stone-50 resize-none" />
+              <div className="flex items-center gap-0.5">
+                <button onMouseDown={(e) => { e.preventDefault(); cmd('bold'); }}
+                  className="px-2 py-1 text-sm font-bold border border-stone-200 rounded bg-stone-50 hover:bg-stone-100 text-stone-700" title="Grassetto (Ctrl+B)">B</button>
+                <button onMouseDown={(e) => { e.preventDefault(); cmd('italic'); }}
+                  className="px-2 py-1 text-sm italic border border-stone-200 rounded bg-stone-50 hover:bg-stone-100 text-stone-700" title="Corsivo (Ctrl+I)">I</button>
+                <div className="w-px self-stretch bg-stone-200 mx-0.5" />
+                {HIGHLIGHTS.map(({ color, label }) => (
+                  <button key={color}
+                    onMouseDown={(e) => { e.preventDefault(); cmd('backColor', color); }}
+                    className="w-5 h-5 rounded border border-stone-300 hover:scale-110 transition-transform flex-shrink-0"
+                    style={{ backgroundColor: color }} title={label} />
+                ))}
+                <button onMouseDown={(e) => { e.preventDefault(); cmd('removeFormat'); }}
+                  className="px-1.5 py-1 text-xs border border-stone-200 rounded bg-stone-50 hover:bg-stone-100 text-stone-400 hover:text-stone-600 leading-none" title="Rimuovi formattazione">✕</button>
+              </div>
+              <div
+                ref={editorRef}
+                contentEditable
+                suppressContentEditableWarning
+                onInput={syncHtml}
+                className="w-44 min-h-[48px] px-2 py-1.5 border border-stone-200 rounded-md focus:outline-none focus:border-amber-400 bg-stone-50 overflow-auto"
+                style={{ fontFamily: 'sans-serif', fontSize: `${tb.fontSize}px` }}
+              />
             </div>
             <div className="w-px self-stretch bg-stone-100" />
             <DimInput label="Larghezza" value={tb.width} onChange={(u) => updateTextBox(tb.id, { width: u })} />
             <DimInput label="Altezza" value={tb.height} onChange={(u) => updateTextBox(tb.id, { height: u })} />
-            <FontSizeInput value={tb.fontSize}
-              onChange={(v) => updateTextBox(tb.id, { fontSize: v })} />
+            <FontSizeInput value={tb.fontSize} onChange={(v) => updateTextBox(tb.id, { fontSize: v })} />
           </>
         );
       })()}

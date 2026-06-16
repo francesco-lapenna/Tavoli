@@ -221,7 +221,7 @@ export const useFloorPlanStore = create<FloorPlanState>()(
           id: crypto.randomUUID(),
           x: Math.floor(roomWidth / 2) - 2,
           y: Math.floor(roomHeight / 2) - 1,
-          text: 'Testo',
+          html: 'Testo',
           width: 4,
           height: 2,
           fontSize: 14,

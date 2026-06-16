@@ -57,7 +57,7 @@ export interface TextBox {
   id: string;
   x: number;
   y: number;
-  text: string;
+  html: string;   // rich HTML content (before v1.0.1 this was plain 'text')
   width: number;  // grid units
   height: number; // grid units
   fontSize: number; // px
