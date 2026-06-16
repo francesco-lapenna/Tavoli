@@ -64,6 +64,8 @@ export default function Toolbar({ stageRef }: ToolbarProps) {
         <kbd className="text-xs bg-stone-100 px-1 rounded">Del</kbd> elimina &nbsp;
         <kbd className="text-xs bg-stone-100 px-1 rounded">Ctrl+Shift+D</kbd> duplica
       </p>
+
+      <p className="text-xs text-stone-300 text-center">v{__APP_VERSION__}</p>
     </aside>
   );
 }
