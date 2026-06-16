@@ -12,7 +12,10 @@
     "electron:dev": "npm run build && electron .",
     "dist": "npm run dist:linux && npm run dist:win",
     "dist:linux": "npm run build && electron-builder --linux --config.directories.output=dist-electron/linux",
-    "dist:win": "electron-builder --win --config.directories.output=dist-electron/windows"
+    "dist:win": "electron-builder --win --config.directories.output=dist-electron/windows",
+    "publish:linux": "npm run build && electron-builder --linux --publish always --config.directories.output=dist-electron/linux",
+    "publish:win": "electron-builder --win --publish always --config.directories.output=dist-electron/windows",
+    "publish": ". ./.env && npm run publish:linux && npm run publish:win"
   },
   "build": {
     "appId": "it.tavoli.piantina",
@@ -25,13 +28,36 @@
       "electron/**"
     ],
     "win": {
-      "target": [{ "target": "portable", "arch": ["x64"] }]
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     },
     "linux": {
-      "target": [{ "target": "AppImage", "arch": ["x64"] }]
-    }
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "francesco-lapenna",
+        "repo": "Tavoli",
+        "releaseType": "release"
+      }
+    ]
   },
   "dependencies": {
+    "electron-updater": "^6.8.9",
     "jspdf": "^4.2.1",
     "konva": "^10.3.0",
     "react": "^19.2.6",
